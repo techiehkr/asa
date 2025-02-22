@@ -10,8 +10,18 @@ connectDb();
 const app = express();
 
 app.use(express.json());
+const allowedOrigins = [
+    "http://localhost:3000",
+    "https://homepagejwlnew.netlify.app"
+]
 app.use(cors({
-    origin: 'https://homepagejwlnew.netlify.app', // frontend origin
+    origin: function (origin,callback){
+        if(!origin || allowedOrigins.includes(origin)){
+            callback(null,true);
+        }else{
+            callback(new Error("Not allowed by CORS"));
+        }
+    } ,
     credentials: true,               // Allow cookies to be sent across domains
 }));
 app.use(cookieParser());
